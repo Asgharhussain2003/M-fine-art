@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: fine-truck-arts
+    env: php
+    region: oregon
+    buildCommand: |
+      sudo apt-get update
+      sudo apt-get install -y php8.2 php8.2-cli php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-curl php8.2-zip unzip
+      composer install --no-dev --optimize-autoloader
+    startCommand: php artisan serve --host 0.0.0.0 --port 10000
+    envVars:
+      - key: APP_ENV
+        value: production
+    plan: free
+    branch: main
+    rootDir: .
+    autoDeploy: true
