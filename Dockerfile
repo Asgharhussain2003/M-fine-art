@@ -12,17 +12,23 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     git \
+    libzip-dev \
     php-mysql \
     php-zip \
     php-mbstring \
     php-xml \
-    php-curl
+    php-curl \
+    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . /var/www
 
 RUN composer install --no-dev --optimize-autoloader
+
+RUN php artisan storage:link || true
+
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 8000
 
